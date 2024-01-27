@@ -6,6 +6,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -15,6 +16,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.jwt.integration.constant.SecurityConstant;
 import com.jwt.integration.domain.UserPrincipal;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 public class JWTTokenProvider 
 {
@@ -39,6 +42,11 @@ public class JWTTokenProvider
     {
         String[] claims = getClaimsFromToken(token);
         return stream(claims).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+    }
+
+    public Authentication getAuthentication(String username, List<GrantedAuthority> authorities, HttpServletRequest request)
+    {
+        return null;
     }
 
     private String[] getClaimsFromToken(String token) {
