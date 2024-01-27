@@ -1,8 +1,7 @@
 package com.jwt.integration.utility;
-
-import java.util.Date;
-
+import java.util.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -28,7 +27,13 @@ public class JWTTokenProvider
         //
     }
 
-    private String[] getClaimsFromUser(UserPrincipal userPrincipal) {
-        
+    private String[] getClaimsFromUser(UserPrincipal userPrincipal)
+    {
+        List<String> authorities = new ArrayList<String>();
+        for(GrantedAuthority grantedAuthority : userPrincipal.getAuthorities())
+        {
+            authorities.add(grantedAuthority.getAuthority());
+        }
+        return authorities.toArray(new String[0]);
     }
 }
