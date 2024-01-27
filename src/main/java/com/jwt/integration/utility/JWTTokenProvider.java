@@ -25,7 +25,7 @@ public class JWTTokenProvider
         .withArrayClaim(SecurityConstant.AUTHORITIES,claims)
         .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstant.EXPIRATION_TIME))
         .sign(Algorithm.HMAC512(secret.getBytes()));
-
+        //
     }
 
     private String[] getClaimsFromUser(UserPrincipal userPrincipal) {
