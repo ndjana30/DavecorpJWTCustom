@@ -1,13 +1,20 @@
 package com.jwt.integration.domain;
 
+import java.util.Date;
+
 import org.springframework.http.HttpStatus;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class HttpResponse {
     private int httpStatusCode;
     private HttpStatus httpStatus;
     private String reason;
     private String message;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy hh:mm:ss")
+    private Date timeStamp;
 
+    
 
     public HttpResponse() {
     }
@@ -17,6 +24,14 @@ public class HttpResponse {
         this.httpStatus = httpStatus;
         this.reason = reason;
         this.message = message;
+        this.timeStamp=new Date();
+    }
+    public Date getTimeStamp() {
+        return this.timeStamp;
+    }
+
+    public void setTimeStamp(Date timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
 

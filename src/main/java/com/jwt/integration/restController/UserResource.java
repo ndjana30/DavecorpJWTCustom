@@ -3,13 +3,15 @@ package com.jwt.integration.restController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jwt.integration.domain.User;
+import com.jwt.integration.exception.domain.ExceptionHandling;
+
+// import com.jwt.integration.domain.User;
 
 @RestController
 @RequestMapping(value = "/user")
-public class UserResource {
+public class UserResource extends ExceptionHandling{
     
-    @RequestMapping("/show")
+    @RequestMapping("/home")
     public String showUser()
     {
         return "application works";

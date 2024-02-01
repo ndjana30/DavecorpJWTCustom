@@ -2,13 +2,18 @@ package com.jwt.integration.utility;
 import static java.util.Arrays.stream;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -17,8 +22,9 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.jwt.integration.constant.SecurityConstant;
 import com.jwt.integration.domain.UserPrincipal;
 
-import jakarta.servlet.http.HttpServletRequest;
 
+
+@Component
 public class JWTTokenProvider 
 {
     @Value("${jwt.secret}")
@@ -46,7 +52,27 @@ public class JWTTokenProvider
 
     public Authentication getAuthentication(String username, List<GrantedAuthority> authorities, HttpServletRequest request)
     {
-        return null;
+        UsernamePasswordAuthenticationToken userPasswordAuthToken = new UsernamePasswordAuthenticationToken(username,null,authorities);
+        userPasswordAuthToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        return userPasswordAuthToken;
+    }
+
+    public boolean isTokenValid(String username, String token)
+    {
+        JWTVerifier verifier = getJWTVerifier();
+        return StringUtils.isNotBlank(username) && !isTokenExpired(verifier, token);
+    }
+
+    public String getSubject(String token)
+    {
+        JWTVerifier verifier = getJWTVerifier();
+        return verifier.verify(token).getSubject();
+    }
+
+    private boolean isTokenExpired(JWTVerifier verifier, String token)
+    {
+        Date expiration = verifier.verify(token).getExpiresAt();
+        return expiration.before(new Date());
     }
 
     private String[] getClaimsFromToken(String token) {
